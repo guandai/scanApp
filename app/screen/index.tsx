@@ -1,19 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Button, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import { useRouter } from 'expo-router'; // Import router for navigation
 
 export default function TabOneScreen() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [scanned, setScanned] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
+  const router = useRouter(); // For navigation
 
+  // Check for user authentication when the screen loads
   useEffect(() => {
-    (async () => {
-      if (!permission) {
-        await requestPermission();
+    const checkAuth = async () => {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        // If no token, navigate to the login screen
+        router.replace('/login');
       }
-    })();
+    };
+
+    checkAuth();
+
+    if (!permission) {
+      requestPermission();
+    }
   }, [permission]);
 
   // Function to handle the barcode scanning result

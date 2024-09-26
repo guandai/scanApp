@@ -1,3 +1,4 @@
+// app › screen › _layout.tsx
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
@@ -15,7 +16,7 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-export default function TabLayout() {
+export default function TabScanCode() {
   const colorScheme = useColorScheme();
 
   return (
@@ -29,7 +30,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
+          title: 'Scan Code',
           tabBarIcon: ({ color }: {color: string}) => <TabBarIcon name="barcode" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -48,7 +49,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="profile"
         options={{
           title: 'My Profile',
           tabBarIcon: ({ color }: { color: string}) => <TabBarIcon name="user" color={color} />,
