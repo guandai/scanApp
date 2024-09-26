@@ -1,14 +1,73 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, Button, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 
 export default function TabOneScreen() {
+  const [facing, setFacing] = useState<CameraType>('back');
+  const [scanned, setScanned] = useState(false);
+  const [permission, requestPermission] = useCameraPermissions();
+  const cameraRef = useRef<CameraView | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      if (!permission) {
+        await requestPermission();
+      }
+    })();
+  }, [permission]);
+
+  // Function to handle the barcode scanning result
+  const handleBarCodeScanned = (scanningResult: { type: string; data: string }) => {
+    setScanned(true); // Set scanned state to true so it doesn't scan continuously
+
+    // Show an alert with the barcode type and data
+    Alert.alert(
+      'Barcode Scanned',
+      `Type: ${scanningResult.type}\nData: ${scanningResult.data}`,
+      [{ text: 'OK', onPress: () => setScanned(false) }] // Reset scanned to false so you can scan again
+    );
+
+    console.log(`Barcode type: ${scanningResult.type}, Data: ${scanningResult.data}`);
+  };
+
+  // Function to toggle between front and back camera
+  function toggleCameraFacing() {
+    setFacing((current) => (current === 'back' ? 'front' : 'back'));
+  }
+
+  // If camera permission is still being loaded
+  if (!permission) {
+    return <View />;
+  }
+
+  // If camera permission is denied
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.message}>We need your permission to show the camera</Text>
+        <Button onPress={requestPermission} title="Grant permission" />
+      </View>
+    );
+  }
+
+  // Render the CameraView component with barcode scanning functionality
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <CameraView
+        style={styles.camera}
+        ref={cameraRef}
+        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+        barcodeScannerSettings={{
+          barcodeTypes: ['qr', 'code128', 'code39', 'pdf417', 'ean13', 'ean8'], // Add supported barcode types
+        }}
+      >
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+            <Text style={styles.text}>Flip Camera</Text>
+          </TouchableOpacity>
+        </View>
+      </CameraView>
+      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
     </View>
   );
 }
@@ -16,16 +75,29 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  message: {
+    textAlign: 'center',
+    paddingBottom: 10,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  camera: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    margin: 64,
+  },
+  button: {
+    flex: 1,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
   },
 });
