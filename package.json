@@ -1,5 +1,5 @@
 {
-  "name": "myapp",
+  "name": "ddscan",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -22,6 +22,7 @@
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/native": "^6.0.2",
     "axios": "^1.7.7",
+    "eas-cli": "^12.5.0",
     "expo": "~51.0.28",
     "expo-barcode-scanner": "~13.0.1",
     "expo-camera": "~15.0.16",
@@ -31,6 +32,7 @@
     "expo-splash-screen": "~0.27.5",
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.7",
+    "expo-updates": "~0.25.25",
     "expo-web-browser": "~13.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
