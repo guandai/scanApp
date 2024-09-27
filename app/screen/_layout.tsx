@@ -28,7 +28,7 @@ export default function TabScanCode() {
         headerShown: useClientOnlyValue(false, true),
       }}>
       <Tabs.Screen
-        name="index"
+        name="scan"
         options={{
           title: 'Scan Code',
           tabBarIcon: ({ color }: {color: string}) => <TabBarIcon name="barcode" color={color} />,

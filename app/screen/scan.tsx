@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Button, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
-import { useRouter } from 'expo-router'; // Import router for navigation
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import { useFocusEffect, useRouter } from 'expo-router'; 
 
 export default function TabOneScreen() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [scanned, setScanned] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
+  const [isFocused, setIsFocused] = useState(true); // Manage tab focus state
   const cameraRef = useRef<CameraView | null>(null);
-  const router = useRouter(); // For navigation
+  const router = useRouter(); 
 
   // Check for user authentication when the screen loads
   useEffect(() => {
@@ -28,15 +29,22 @@ export default function TabOneScreen() {
     }
   }, [permission]);
 
+  // Use useFocusEffect to manage tab focus state
+  useFocusEffect(
+    React.useCallback(() => {
+      setIsFocused(true); // Tab is focused
+      return () => setIsFocused(false); // Tab is unfocused
+    }, [])
+  );
+
   // Function to handle the barcode scanning result
   const handleBarCodeScanned = (scanningResult: { type: string; data: string }) => {
-    setScanned(true); // Set scanned state to true so it doesn't scan continuously
+    setScanned(true);
 
-    // Show an alert with the barcode type and data
     Alert.alert(
       'Barcode Scanned',
       `Type: ${scanningResult.type}\nData: ${scanningResult.data}`,
-      [{ text: 'OK', onPress: () => setScanned(false) }] // Reset scanned to false so you can scan again
+      [{ text: 'OK', onPress: () => setScanned(false) }]
     );
 
     console.log(`Barcode type: ${scanningResult.type}, Data: ${scanningResult.data}`);
@@ -47,12 +55,10 @@ export default function TabOneScreen() {
     setFacing((current) => (current === 'back' ? 'front' : 'back'));
   }
 
-  // If camera permission is still being loaded
   if (!permission) {
     return <View />;
   }
 
-  // If camera permission is denied
   if (!permission.granted) {
     return (
       <View style={styles.container}>
@@ -62,23 +68,25 @@ export default function TabOneScreen() {
     );
   }
 
-  // Render the CameraView component with barcode scanning functionality
+  // Conditionally render the CameraView component only when the tab is focused
   return (
     <View style={styles.container}>
-      <CameraView
-        style={styles.camera}
-        ref={cameraRef}
-        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-        barcodeScannerSettings={{
-          barcodeTypes: ['qr', 'code128', 'code39', 'pdf417', 'ean13', 'ean8'], // Add supported barcode types
-        }}
-      >
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Text style={styles.text}>Flip Camera</Text>
-          </TouchableOpacity>
-        </View>
-      </CameraView>
+      {isFocused && (
+        <CameraView
+          style={styles.camera}
+          ref={cameraRef}
+          onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+          barcodeScannerSettings={{
+            barcodeTypes: ['qr', 'code128', 'code39', 'pdf417', 'ean13', 'ean8'],
+          }}
+        >
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+              <Text style={styles.text}>Flip Camera</Text>
+            </TouchableOpacity>
+          </View>
+        </CameraView>
+      )}
       {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
     </View>
   );
