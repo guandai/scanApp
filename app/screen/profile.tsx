@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // For token storage
 import { useRouter } from 'expo-router'; // For navigation after logout
 import EditScreenInfo from '@/components/EditScreenInfo';
+import { ColorSpace } from 'react-native-reanimated';
 
 export default function TabProfileScreen() {
   const router = useRouter(); // Hook for navigation
@@ -27,7 +28,7 @@ export default function TabProfileScreen() {
       <Text style={styles.title}>Profile</Text>
       <View style={styles.separator} />
       <EditScreenInfo path="app/screen/profile.tsx" />
-
+      <br />
       {/* Logout Button */}
       <Button title="Logout" onPress={handleLogout} />
     </View>
