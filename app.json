@@ -14,7 +14,8 @@
     },
     "ios": {
       "icon": "./assets/images/icon.png",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.guandai.myApp"
     },
     "android": {
       "icon": "./assets/images/icon.png",
@@ -25,7 +26,8 @@
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.guandai.myApp"
     },
     "web": {
       "icon": "./assets/images/icon.png",

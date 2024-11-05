@@ -1,11 +1,19 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // For token storage
-import { LoginUserReq, LoginUserRes } from '@/constants/type';
+import { LoginUserReq, LoginUserRes, UserRolesEnum } from '@/constants/type.d';
 
 const API_BASE_URL = 'https://label.daidk.com/api/users'; // Update with your actual backend URL
 
 class UserApi {
   // Login method
+  async fakeLogin(_payload: LoginUserReq): Promise<LoginUserRes> {
+    return {
+      token: '12345',
+      userId: 12345,
+      userRole: UserRolesEnum.admin,
+    };
+  }
+
   async login(payload: LoginUserReq): Promise<LoginUserRes> {
     const response = await axios.post<LoginUserRes>(`${API_BASE_URL}/login`, payload);
     // You can store the token and user data after successful login

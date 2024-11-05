@@ -1,4 +1,4 @@
-export declare enum UserRolesEnum {
+export enum UserRolesEnum {
     worker = "worker",
     admin = "admin"
 }
@@ -17,3 +17,4 @@ export type LoginUserRes = {
     userId: number;
     userRole: UserRolesEnum;
 };
+

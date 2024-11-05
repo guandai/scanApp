@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import api from './api/UserApi';
 
 export default function LoginScreen() {
+  console.log(`LoginScreen `);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -14,7 +15,8 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const response = await api.login({ email, password });
+      // const response = await api.login({ email, password });
+      const response = await api.fakeLogin({ email, password });
       
       // Store token and user info
       await AsyncStorage.setItem('token', response.token);

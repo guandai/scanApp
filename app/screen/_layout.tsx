@@ -17,6 +17,7 @@ function TabBarIcon(props: {
 }
 
 export default function TabScanCode() {
+  console.log(`TabScanCode `);
   const colorScheme = useColorScheme();
 
   return (

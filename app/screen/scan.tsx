@@ -52,7 +52,7 @@ export default function TabOneScreen() {
 
   // Function to toggle between front and back camera
   function toggleCameraFacing() {
-    setFacing((current) => (current === 'back' ? 'front' : 'back'));
+    setFacing((current) => current === 'back' ? 'front' : 'back');
   }
 
   if (!permission) {
@@ -75,6 +75,7 @@ export default function TabOneScreen() {
         <CameraView
           style={styles.camera}
           ref={cameraRef}
+          facing={facing}
           onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
           barcodeScannerSettings={{
             barcodeTypes: ['qr', 'code128', 'code39', 'pdf417', 'ean13', 'ean8'],

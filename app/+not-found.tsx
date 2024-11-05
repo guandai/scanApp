@@ -4,17 +4,16 @@ import { StyleSheet } from 'react-native';
 import { Text, View } from '@/components/Themed';
 
 export default function NotFoundScreen() {
+  console.log(`NotFoundScreen `);
   return (
-    <>
-      <Stack.Screen options={{ title: 'Oops!' }} />
       <View style={styles.container}>
+        <Stack.Screen options={{ title: 'Oops!' }} />
         <Text style={styles.title}>This screen doesn't exist.</Text>
 
-        <Link href="/screen" style={styles.link}>
+        <Link href="/modal" style={styles.link}>
           <Text style={styles.linkText}>Go to home screen!</Text>
         </Link>
       </View>
-    </>
   );
 }
 
